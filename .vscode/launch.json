@@ -1,0 +1,47 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Preprocess SSL Dataset",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nnssl/experiment_planning/plan_and_preprocess_entrypoints.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "-d",
+                "601",
+                "-fpe",
+                "DatasetFingerprintExtractor",
+                "-npfp",
+                "16",
+                "--clean",
+            ]
+        },
+        {
+            "name": "Python: Training SSL Dataset",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nnssl/run/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "601",
+                "3d_fullres",
+                "-tr",
+                "nnsslDummyMAETrainer",
+            ]
+        }
+    ]
+}
