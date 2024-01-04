@@ -40,7 +40,7 @@
                 "601",
                 "3d_fullres",
                 "-tr",
-                "nnsslDummyMAETrainer",
+                "BaseMAETrainer",
             ]
         }
     ]
