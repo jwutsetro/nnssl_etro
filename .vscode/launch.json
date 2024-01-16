@@ -21,7 +21,7 @@
             "justMyCode": true,
             "args": [
                 "-d",
-                "601",
+                "737",
                 "-fpe",
                 "DatasetFingerprintExtractor",
                 "-npfp",
@@ -37,7 +37,7 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "601",
+                "737",
                 "3d_fullres",
                 "-tr",
                 "BaseMAETrainer",
