@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Python: Current File",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
@@ -14,14 +14,16 @@
         },
         {
             "name": "Python: Preprocess SSL Dataset",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/nnssl/experiment_planning/plan_and_preprocess_entrypoints.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
                 "-d",
-                "737",
+                "739",
+                "-pl",
+                "FixedResEncUNetPlanner",
                 "-fpe",
                 "DatasetFingerprintExtractor",
                 "-npfp",
@@ -30,8 +32,8 @@
             ]
         },
         {
-            "name": "Python: Training SSL Dataset",
-            "type": "python",
+            "name": "Python: Train BaseMAETrainer",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/nnssl/run/run_training.py",
             "console": "integratedTerminal",
@@ -41,6 +43,49 @@
                 "3d_fullres",
                 "-tr",
                 "BaseMAETrainer",
+            ]
+        },
+
+        {
+            "name": "Python: Train DummyMAETrainer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/nnssl/run/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "737",
+                "3d_fullres",
+                "-tr",
+                "DummyMAETrainer",
+            ]
+        },
+        {
+            "name": "Python: Train SparkMAETrainer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/nnssl/run/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "737",
+                "3d_fullres",
+                "-tr",
+                "SparkMAETrainer",
+            ]
+        },
+        {
+            "name": "Python: Train SparkMAETrainer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/nnssl/run/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "737",
+                "3d_fullres",
+                "-tr",
+                "SparkMAETrainer",
             ]
         }
     ]
