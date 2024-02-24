@@ -13,7 +13,7 @@
             "justMyCode": true
         },
         {
-            "name": "Python: Preprocess SSL Dataset",
+            "name": "SSL Preprocess D741",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/nnssl/experiment_planning/plan_and_preprocess_entrypoints.py",
@@ -21,7 +21,26 @@
             "justMyCode": true,
             "args": [
                 "-d",
-                "739",
+                "741",
+                "-pl",
+                "FixedResEncUNetPlanner",
+                "-fpe",
+                "DatasetFingerprintExtractor",
+                "-npfp",
+                "16",
+                "--clean",
+            ]
+        },
+        {
+            "name": "SSL Preprocess D742",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/nnssl/experiment_planning/plan_and_preprocess_entrypoints.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "-d",
+                "742",
                 "-pl",
                 "FixedResEncUNetPlanner",
                 "-fpe",
@@ -75,14 +94,14 @@
             ]
         },
         {
-            "name": "Python: Train SparkMAETrainer",
+            "name": "SSL Train D741 SparkMAETrainer_OASIS3",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/nnssl/run/run_training.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "737",
+                "741",
                 "3d_fullres",
                 "-tr",
                 "SparkMAETrainer",
