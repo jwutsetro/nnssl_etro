@@ -121,7 +121,8 @@
                 "VoCoTrainer",
             ],
             "env": {
-                "nnssl_raw": "/home/tassilowald/Data/Datasets/nnunetv2/nnUNet_raw",
+                "nnssl_preprocessed": "/home/gregor/datasets/nnUNet_preprocessed",
+                "nnssl_results": "/home/gregor/SSL-nnUNet/results",
                 "nnUNet_n_proc_DA": "12",
             }
         },
