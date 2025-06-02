@@ -15,6 +15,7 @@ Currently it includes the **ResEnc-L** [[a]((https://arxiv.org/abs/2410.23132)),
 6. [SimMIM (SimMIM)](https://openaccess.thecvf.com/content/CVPR2022/html/Xie_SimMIM_A_Simple_Framework_for_Masked_Image_Modeling_CVPR_2022_paper.html)
 7. [SwinUNETR pre-training  (SwinUNETR)](https://arxiv.org/abs/2111.14791)
 8. [SimCLR (SimCLR)](https://arxiv.org/abs/2002.05709)
+9. Supervised contrastive SwinUNETR pre-training (SwinSupCon)
 
 -----
 ### Complimentary resources:
@@ -146,8 +147,11 @@ The `trainer` determines pre-training method and architecture, the `dataset` the
 
 An exemplary pre-training call for a 4xGPU ResEnc-L MAE pre-training would be:
 `python ./nnssl/run/run_training.py ID CONFIG -tr BaseMAETrainer_BS8 -p nnsslPlans -num_gpus 4`
-or 
+or
 `nnssl_train ID CONFIG -tr BaseMAETrainer_BS8 -p nnsslPlans -num_gpus 4`
+
+An example call for the supervised contrastive SwinUNETR pre-training is:
+`nnssl_train ID CONFIG -tr SwinUNETRSupConTrainer_BS8 -p nnsslPlans -num_gpus 4`
 
 Note: Due to the lack of e.g. linear-probing for segmentation, no metrics aside from the train and validation loss are tracked during pre-training.
 
