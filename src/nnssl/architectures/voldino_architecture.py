@@ -11,7 +11,14 @@ class VolDINOArchitecture(nn.Module):
         self.global_pool = nn.AdaptiveAvgPool3d((1, 1, 1))
         total = sum(feature_channels)
         self.global_head = VocoProjectionHead(total, 1024, 1024, norm_op=nn.InstanceNorm1d)
-        self.patch_head = nn.Conv3d(feature_channels[0], 256, kernel_size=1)
+
+        # produce patch tokens at a much lower spatial resolution to keep memory
+        # usage manageable. block_size 16 corresponds to the masking granularity
+        # used in the trainer
+        self.patch_head = nn.Conv3d(
+            feature_channels[0], 256, kernel_size=16, stride=16
+        )
+
 
     def forward(self, x: torch.Tensor):
         feats = self.encoder(x)
