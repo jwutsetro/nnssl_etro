@@ -34,8 +34,15 @@ ResencL:
     nnssl_train ID CONFIG -tr BaseMAETrainer -p nnsslPlans 
     
 Primus B:
-    
+
     nnssl_train ID CONFIG -tr BaseEvaMAETrainer -p nnsslPlans
+
+Volumetric DINO:
+
+    nnssl_train ID CONFIG -tr VolDINOTrainer -p nnsslPlans
+
+VolDINO uses a strided convolution to obtain patch tokens from 16\u00d716\u00d716
+blocks which keeps GPU memory consumption low.
 
 The ID corresponds to the dataset ID from above, and CONFIG corresponds to the defined target spacing ('onemmiso','median, 'noresample').
 Here you can explore other implemented trainers, and you're also highly encouraged to implement your own SSL methods.

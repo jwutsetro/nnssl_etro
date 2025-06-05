@@ -16,6 +16,7 @@ Currently it includes the **ResEnc-L** [[a]((https://arxiv.org/abs/2410.23132)),
 7. [SwinUNETR pre-training  (SwinUNETR)](https://arxiv.org/abs/2111.14791)
 8. [SimCLR (SimCLR)](https://arxiv.org/abs/2002.05709)
 9. Supervised contrastive SwinUNETR pre-training (SwinSupCon)
+10. Volumetric DINO (volDINO)
 
 -----
 ### Complimentary resources:
@@ -152,6 +153,12 @@ or
 
 An example call for the supervised contrastive SwinUNETR pre-training is:
 `nnssl_train ID CONFIG -tr SwinUNETRSupConTrainer_BS8 -p nnsslPlans -num_gpus 4`
+
+An example call for the Volumetric DINO pre-training is:
+`nnssl_train ID CONFIG -tr VolDINOTrainer -p nnsslPlans -num_gpus 4`
+
+VolDINO extracts patch tokens using a strided convolution (kernel 16, stride 16)
+to keep memory use manageable even for large 3D crops.
 
 Note: Due to the lack of e.g. linear-probing for segmentation, no metrics aside from the train and validation loss are tracked during pre-training.
 
