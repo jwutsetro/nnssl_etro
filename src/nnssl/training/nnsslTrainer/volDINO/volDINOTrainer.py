@@ -19,6 +19,8 @@ from nnssl.ssl_data.limited_len_wrapper import LimitedLenWrapper
 from nnssl.utilities.helpers import dummy_context
 from nnssl.utilities.default_n_proc_DA import get_allowed_n_proc_DA
 from nnssl.experiment_planning.experiment_planners.plan import Plan, ConfigurationPlan
+
+from nnssl.adaptation_planning.adaptation_plan import AdaptationPlan, ArchitecturePlans
 from nnssl.ssl_data.configure_basic_dummyDA import configure_rotation_dummyDA_mirroring_and_inital_patch_size
 
 from nnssl.training.nnsslTrainer.masked_image_modeling.BaseMAETrainer import (
@@ -56,10 +58,31 @@ class VolDINOTrainer(AbstractBaseTrainer):
     def build_loss(self) -> nn.Module:
         return VolDINOLoss(out_dim=1024)
 
-    def build_architecture_and_adaptation_plan(self, config_plan: ConfigurationPlan, num_input_channels: int, num_output_channels: int):
-        encoder = get_network_by_name(config_plan, "ResEncL", num_input_channels, num_output_channels, encoder_only=True)
+    def build_architecture_and_adaptation_plan(
+        self, config_plan: ConfigurationPlan, num_input_channels: int, num_output_channels: int
+    ) -> tuple[nn.Module, AdaptationPlan]:
+        encoder = get_network_by_name(
+            config_plan,
+            "ResEncL",
+            num_input_channels,
+            num_output_channels,
+            encoder_only=True,
+        )
         architecture = VolDINOArchitecture(encoder, encoder.output_channels)
-        adapt_plan = deepcopy(self.plan)
+
+        plan = deepcopy(self.plan)
+        plan.configurations[self.configuration_name].patch_size = self.global_crop_size
+
+        adapt_plan = AdaptationPlan(
+            architecture_plans=ArchitecturePlans("ResEncL"),
+            pretrain_plan=plan,
+            recommended_downstream_patchsize=self.recommended_downstream_patchsize,
+            pretrain_num_input_channels=num_input_channels,
+            key_to_encoder="encoder.stages",
+            key_to_stem="encoder.stem",
+            keys_to_in_proj=("encoder.stem.convs.0.conv", "encoder.stem.convs.0.all_modules.0"),
+        )
+
         return architecture, adapt_plan
 
     @staticmethod
