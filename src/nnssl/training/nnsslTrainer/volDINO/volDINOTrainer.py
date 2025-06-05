@@ -19,8 +19,10 @@ from nnssl.ssl_data.limited_len_wrapper import LimitedLenWrapper
 from nnssl.utilities.helpers import dummy_context
 from nnssl.utilities.default_n_proc_DA import get_allowed_n_proc_DA
 from nnssl.experiment_planning.experiment_planners.plan import Plan, ConfigurationPlan
+=
 from nnssl.adaptation_planning.adaptation_plan import AdaptationPlan, ArchitecturePlans
 from nnssl.ssl_data.configure_basic_dummyDA import configure_rotation_dummyDA_mirroring_and_inital_patch_size
+
 from nnssl.training.nnsslTrainer.masked_image_modeling.BaseMAETrainer import (
     create_blocky_mask,
 )
@@ -165,7 +167,6 @@ class VolDINOTrainer(AbstractBaseTrainer):
         ]
         mask = torch.stack(mask)[:, None, ...]
         return mask
-
     def update_teacher(self):
         for p_s, p_t in zip(self.network.parameters(), self.teacher.parameters()):
             p_t.data.mul_(self.teacher_momentum).add_(p_s.data * (1.0 - self.teacher_momentum))
@@ -180,6 +181,7 @@ class VolDINOTrainer(AbstractBaseTrainer):
                 mode="trilinear",
                 align_corners=False,
             )
+
         B = batch["batch_size"]
 
         all_crops = torch.cat([g_crops, l_crops], 0)
@@ -212,6 +214,7 @@ class VolDINOTrainer(AbstractBaseTrainer):
     def validation_step(self, batch: dict) -> dict:
         g_crops = batch["global_crops"].to(self.device, non_blocking=True)
         l_crops = batch["local_crops"].to(self.device, non_blocking=True)
+
         if l_crops.shape[2:] != self.global_crop_size:
             l_crops = torch.nn.functional.interpolate(
                 l_crops,
@@ -219,6 +222,7 @@ class VolDINOTrainer(AbstractBaseTrainer):
                 mode="trilinear",
                 align_corners=False,
             )
+
         all_crops = torch.cat([g_crops, l_crops], 0)
         mask = self.mask_creation(all_crops.shape[0], all_crops.shape[2:], self.mask_ratio).to(self.device, non_blocking=True)
         masked_crops = all_crops * mask
