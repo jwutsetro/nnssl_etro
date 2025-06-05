@@ -6,6 +6,7 @@ from typing_extensions import override
 from nnssl.ssl_data.dataloading.swin_unetr_supcon_transform import SwinUNETRSupConTransform
 from torch import autocast
 from nnssl.utilities.helpers import dummy_context
+from loguru import logger
 from nnssl.ssl_data.dataloading.data_loader_3d_centroid import nnsslDataLoader3DCentroid
 from nnssl.training.loss.swinunetr_supcon_loss import SwinUNETRSupConLoss
 from nnssl.training.nnsslTrainer.swinunetr_pretrain.SwinUNETRTrainer import SwinUNETRTrainer
@@ -60,6 +61,12 @@ class SwinUNETRSupConTrainer(SwinUNETRTrainer):
         ]
         return Compose(tr_transforms)
 
+    @staticmethod
+    @override
+    def get_validation_transforms() -> AbstractTransform:
+        """Return validation transforms that keep centroids."""
+        return SwinUNETRSupConTrainer.get_training_transforms()
+
     @override
     def get_dataloaders(self):
         tr_transforms = self.get_training_transforms()
@@ -96,6 +103,7 @@ class SwinUNETRSupConTrainer(SwinUNETRTrainer):
 
     @override
     def train_step(self, batch: dict) -> dict:
+        logger.debug(f"Training batch keys: {list(batch.keys())}")
         imgs1_rotated, imgs2_rotated = batch["imgs_rotated"]
         rotations1, rotations2 = batch["rotations"]
         imgs1_rotated_cutout, imgs2_rotated_cutout = batch["imgs_rotated_cutout"]
@@ -156,6 +164,7 @@ class SwinUNETRSupConTrainer_BS8(SwinUNETRSupConTrainer):
 
     @override
     def validation_step(self, batch: dict) -> dict:
+        logger.debug(f"Validation batch keys: {list(batch.keys())}")
         imgs1_rotated, imgs2_rotated = batch["imgs_rotated"]
         rotations1, rotations2 = batch["rotations"]
         imgs1_rotated_cutout, imgs2_rotated_cutout = batch["imgs_rotated_cutout"]
