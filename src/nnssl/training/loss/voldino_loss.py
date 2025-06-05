@@ -12,6 +12,7 @@ class VolDINOLoss(nn.Module):
 
     def forward(self, student_output: torch.Tensor, teacher_output: torch.Tensor):
         # teacher centering and sharpening
+
         center = self.center.to(teacher_output.device)
         t_out = F.softmax((teacher_output - center) / self.teacher_temp, dim=-1)
         s_out = F.log_softmax(student_output / self.student_temp, dim=-1)
@@ -20,4 +21,5 @@ class VolDINOLoss(nn.Module):
         new_center = teacher_output.mean(dim=0, keepdim=True)
         updated = center * self.center_momentum + new_center.detach() * (1 - self.center_momentum)
         self.center.data = updated.to(self.center.device)
+
         return loss

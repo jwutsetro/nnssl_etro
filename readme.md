@@ -157,6 +157,7 @@ An example call for the supervised contrastive SwinUNETR pre-training is:
 An example call for the Volumetric DINO pre-training is:
 `nnssl_train ID CONFIG -tr VolDINOTrainer -p nnsslPlans -num_gpus 4`
 
+
 VolDINO extracts patch tokens using a strided convolution (kernel 16, stride 16)
 to keep memory use manageable even for large 3D crops.
 
