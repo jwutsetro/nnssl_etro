@@ -1,5 +1,6 @@
 from copy import deepcopy
-from typing import Union, Tuple, override
+from typing import Union, Tuple
+from typing_extensions import override
 
 import numpy as np
 import torch

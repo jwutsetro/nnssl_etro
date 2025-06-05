@@ -1,4 +1,5 @@
-from typing import Tuple, Union, override
+from typing import Tuple, Union
+from typing_extensions import override
 import numpy as np
 from torch.nn.modules import Module
 from nnssl.adaptation_planning.adaptation_plan import AdaptationPlan, ArchitecturePlans
