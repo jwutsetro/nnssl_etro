@@ -8,7 +8,9 @@ from typing_extensions import override
 from batchgenerators.dataloading.single_threaded_augmenter import SingleThreadedAugmenter
 from batchgenerators.transforms.abstract_transforms import AbstractTransform, Compose
 from batchgenerators.transforms.utility_transforms import NumpyToTensor
-from torch.cuda.amp import autocast
+
+from torch import autocast
+
 
 from nnssl.training.nnsslTrainer.AbstractTrainer import AbstractBaseTrainer
 from nnssl.architectures.get_network_by_name import get_network_by_name
