@@ -205,7 +205,18 @@ class VolDINOTrainer(AbstractBaseTrainer):
             student_global, student_patch = self.network(masked_crops)
             with torch.no_grad():
                 teacher_global, teacher_patch = self.teacher(all_crops)
-            img_loss = self.loss(student_global, teacher_global[: self.n_global * B])
+
+            student_global = student_global.view(self.n_global + self.n_local, B, -1)
+            teacher_global = teacher_global[: self.n_global * B].view(self.n_global, B, -1)
+
+            img_loss = 0.0
+            for t in range(self.n_global):
+                for s in range(self.n_global + self.n_local):
+                    if s == t:
+                        continue
+                    img_loss += self.loss(student_global[s], teacher_global[t])
+            img_loss /= self.n_global * (self.n_global + self.n_local - 1)
+
             patch_loss = nn.functional.mse_loss(student_patch, teacher_patch)
             loss = img_loss + patch_loss
 
@@ -242,7 +253,19 @@ class VolDINOTrainer(AbstractBaseTrainer):
             with autocast(self.device.type, enabled=True) if self.device.type == "cuda" else dummy_context():
                 student_global, student_patch = self.network(masked_crops)
                 teacher_global, teacher_patch = self.teacher(all_crops)
-                img_loss = self.loss(student_global, teacher_global[: self.n_global * batch["batch_size"]])
+
+                B = batch["batch_size"]
+                student_global = student_global.view(self.n_global + self.n_local, B, -1)
+                teacher_global = teacher_global[: self.n_global * B].view(self.n_global, B, -1)
+
+                img_loss = 0.0
+                for t in range(self.n_global):
+                    for s in range(self.n_global + self.n_local):
+                        if s == t:
+                            continue
+                        img_loss += self.loss(student_global[s], teacher_global[t])
+                img_loss /= self.n_global * (self.n_global + self.n_local - 1)
+
                 patch_loss = nn.functional.mse_loss(student_patch, teacher_patch)
                 loss = img_loss + patch_loss
         return {"loss": loss.detach().cpu().numpy()}
