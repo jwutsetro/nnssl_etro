@@ -34,8 +34,12 @@ ResencL:
     nnssl_train ID CONFIG -tr BaseMAETrainer -p nnsslPlans 
     
 Primus B:
-    
+
     nnssl_train ID CONFIG -tr BaseEvaMAETrainer -p nnsslPlans
+
+Volumetric DINO:
+
+    nnssl_train ID CONFIG -tr VolDINOTrainer -p nnsslPlans
 
 The ID corresponds to the dataset ID from above, and CONFIG corresponds to the defined target spacing ('onemmiso','median, 'noresample').
 Here you can explore other implemented trainers, and you're also highly encouraged to implement your own SSL methods.
