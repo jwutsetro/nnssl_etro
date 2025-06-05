@@ -21,6 +21,11 @@ from nnssl.utilities.default_n_proc_DA import get_allowed_n_proc_DA
 from nnssl.experiment_planning.experiment_planners.plan import Plan, ConfigurationPlan
 from nnssl.ssl_data.configure_basic_dummyDA import configure_rotation_dummyDA_mirroring_and_inital_patch_size
 
+from nnssl.training.nnsslTrainer.masked_image_modeling.BaseMAETrainer import (
+    create_blocky_mask,
+)
+
+
 class VolDINOTrainer(AbstractBaseTrainer):
     def __init__(
         self,
@@ -29,11 +34,15 @@ class VolDINOTrainer(AbstractBaseTrainer):
         fold: int,
         pretrain_json: dict,
         device: torch.device = torch.device("cuda"),
+
+        patch_size: tuple[int, int, int] = (160, 160, 160),
     ):
+        plan.configurations[configuration_name].patch_size = patch_size
         super().__init__(plan, configuration_name, fold, pretrain_json, device)
         self.teacher_momentum = 0.996
-        self.global_crop_size = self.config_plan.patch_size
-        self.local_crop_size = tuple([s // 2 for s in self.config_plan.patch_size])
+        self.global_crop_size = tuple(self.config_plan.patch_size)
+        self.local_crop_size = tuple(s // 2 for s in self.global_crop_size)
+
         self.n_global = 2
         self.n_local = 4
         self.mask_ratio = 0.5
@@ -124,6 +133,23 @@ class VolDINOTrainer(AbstractBaseTrainer):
                 wait_time=0.02,
             )
         return mt_gen_train, mt_gen_val
+
+
+    @staticmethod
+    def mask_creation(
+        batch_size: int,
+        patch_size: Tuple[int, int, int],
+        mask_ratio: float,
+        rng_seed: int | None = None,
+        block_size: int = 16,
+    ) -> torch.Tensor:
+        mask = [
+            create_blocky_mask(patch_size, block_size, mask_ratio, rng_seed)
+            for _ in range(batch_size)
+        ]
+        mask = torch.stack(mask)[:, None, ...]
+        return mask
+
 
     def update_teacher(self):
         for p_s, p_t in zip(self.network.parameters(), self.teacher.parameters()):
