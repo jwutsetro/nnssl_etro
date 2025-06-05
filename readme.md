@@ -161,7 +161,6 @@ An example call for the Volumetric DINO pre-training is:
 VolDINO extracts patch tokens using a strided convolution (kernel 16, stride 16)
 to keep memory use manageable even for large 3D crops.
 
-
 Note: Due to the lack of e.g. linear-probing for segmentation, no metrics aside from the train and validation loss are tracked during pre-training.
 
 ### 4. Adaptation
