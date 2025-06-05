@@ -19,7 +19,7 @@ from nnssl.ssl_data.limited_len_wrapper import LimitedLenWrapper
 from nnssl.utilities.helpers import dummy_context
 from nnssl.utilities.default_n_proc_DA import get_allowed_n_proc_DA
 from nnssl.experiment_planning.experiment_planners.plan import Plan, ConfigurationPlan
-=
+
 from nnssl.adaptation_planning.adaptation_plan import AdaptationPlan, ArchitecturePlans
 from nnssl.ssl_data.configure_basic_dummyDA import configure_rotation_dummyDA_mirroring_and_inital_patch_size
 
@@ -161,12 +161,22 @@ class VolDINOTrainer(AbstractBaseTrainer):
         rng_seed: int | None = None,
         block_size: int = 16,
     ) -> torch.Tensor:
-        mask = [
+
+        """Return a mask matching ``patch_size`` for multiplying with the input."""
+        small_masks = [
             create_blocky_mask(patch_size, block_size, mask_ratio, rng_seed)
             for _ in range(batch_size)
         ]
-        mask = torch.stack(mask)[:, None, ...]
+        mask = torch.stack(small_masks)[:, None, ...]
+        # upscale the block mask to the actual patch size
+        mask = (
+            mask.repeat_interleave(block_size, dim=2)
+            .repeat_interleave(block_size, dim=3)
+            .repeat_interleave(block_size, dim=4)
+        )
         return mask
+
+
     def update_teacher(self):
         for p_s, p_t in zip(self.network.parameters(), self.teacher.parameters()):
             p_t.data.mul_(self.teacher_momentum).add_(p_s.data * (1.0 - self.teacher_momentum))
