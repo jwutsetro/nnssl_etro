@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 from torch._dynamo import OptimizedModule
-from typing import Tuple, Union, override
-
+from typing import Tuple, Union
+from typing_extensions import override
 from nnssl.adaptation_planning.adaptation_plan import AdaptationPlan, ArchitecturePlans
 from nnssl.architectures.evaMAE_module import EvaMAE
 from torch import autocast
