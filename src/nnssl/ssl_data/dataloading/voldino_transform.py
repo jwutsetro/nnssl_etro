@@ -59,9 +59,12 @@ class VolDINOTransform(AbstractTransform):
             )
 
     def random_crop(self, data: np.ndarray, crop_size: Tuple[int, int, int]) -> np.ndarray:
-        x_off = np.random.randint(0, data.shape[2] - crop_size[0] + 1)
-        y_off = np.random.randint(0, data.shape[3] - crop_size[1] + 1)
-        z_off = np.random.randint(0, data.shape[4] - crop_size[2] + 1)
+
+        """Randomly crop ``data`` which is shaped [C, X, Y, Z]."""
+        x_off = np.random.randint(0, data.shape[1] - crop_size[0] + 1)
+        y_off = np.random.randint(0, data.shape[2] - crop_size[1] + 1)
+        z_off = np.random.randint(0, data.shape[3] - crop_size[2] + 1)
+
         return data[
             :,
             x_off : x_off + crop_size[0],
@@ -83,8 +86,10 @@ class VolDINOTransform(AbstractTransform):
         global_crops = []
         local_crops = []
         for b in range(B):
-            g = self.get_crops(data[b:b+1], self.global_crop_size, self.n_global)
-            l = self.get_crops(data[b:b+1], self.local_crop_size, self.n_local)
+
+            g = self.get_crops(data[b], self.global_crop_size, self.n_global)
+            l = self.get_crops(data[b], self.local_crop_size, self.n_local)
+
             global_crops.append(g)
             local_crops.append(l)
         global_crops = np.concatenate(global_crops, axis=0)
